@@ -1,0 +1,19 @@
+name: Require PASS Label
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  check-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for PASS label
+        run: |
+          if [[ "${{ contains(github.event.pull_request.labels.*.name, 'PASS') }}" == "true" ]]; then
+            echo "✓ PASS label found"
+            exit 0
+          else
+            echo "✗ PASS label required but not found"
+            exit 1
+          fi
